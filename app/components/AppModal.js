@@ -20,6 +20,7 @@ export default function AppModal({
 	setVisible,
 	setTime,
 	time,
+	color,
 }) {
 	const handleCloseButton = () => {
 		setVisible(false);
@@ -32,16 +33,26 @@ export default function AppModal({
 					style={styles.closeButton}
 					onPress={handleCloseButton}
 				>
-					<Text style={styles.closeButtonText}>Close</Text>
+					<Text
+						style={[
+							styles.closeButtonText,
+							{ color: color.primary },
+						]}
+					>
+						Close
+					</Text>
 				</TouchableOpacity>
 
 				<ScrollView>
 					{array.map((item) => (
 						<TouchableOpacity
-							style={styles.textContainer}
+							style={[
+								styles.textContainer,
+								{ borderColor: color.primary },
+							]}
 							key={item.id}
 							onPress={() => {
-								console.log(item.time);
+								// console.log(item.time);
 								let myTime = { ...time };
 								myTime = {
 									color: theme.colors.white,
@@ -69,7 +80,6 @@ const styles = StyleSheet.create({
 		alignSelf: "center",
 	},
 	closeButtonText: {
-		color: theme.colors.primary,
 		fontWeight: "bold",
 		fontSize: 20,
 		marginVertical: 10,
@@ -78,7 +88,6 @@ const styles = StyleSheet.create({
 		width: "90%",
 		height: 50,
 		alignSelf: "center",
-		borderColor: theme.colors.primary,
 		borderWidth: 1.5,
 		marginBottom: 10,
 		borderRadius: 20,

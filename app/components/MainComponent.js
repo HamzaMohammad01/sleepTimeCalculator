@@ -11,6 +11,18 @@ import * as array from "../utils/timeArray";
 import sleeptime from "../utils/sleeptime";
 
 export default function MainComponent() {
+	const [color, setColor] = useState({
+		primary: "#5786FF",
+		secondary: "#E20000",
+	});
+	const [methodText, setMethodText] = useState({
+		heading: "I want to wake up at",
+		bottomLine: "I plan to fall asleep at",
+	});
+	const [fall_asleep_at, setFall_asleep_at] = useState({
+		visible: false,
+		hidden: true,
+	});
 	const [hoursModalVisible, setHoursModalVisible] = useState(false);
 	const [minutesModalVisible, setMinutesModalVisible] = useState(false);
 	const [hours, setHours] = useState({ color: "#a0a0a0", value: "Hours" });
@@ -40,7 +52,8 @@ export default function MainComponent() {
 		let hrs = parseInt(hours.value);
 		let mins = parseInt(minutes.value);
 		if (amPm.visible === "PM") hrs += 12;
-		let time = sleeptime(hrs, mins, amPm.visible, false, false);
+		// if (fall_asleep_at === true) {let time = }
+		let time = sleeptime(hrs, mins, amPm.visible, false, fall_asleep_at);
 		setResult(time);
 		setConditionRender({ timeQuery: false, timeResult: true });
 	};
@@ -53,7 +66,25 @@ export default function MainComponent() {
 		setConditionRender({ timeQuery: true, timeResult: false });
 	};
 	const handleSwtichMethodButton = () => {
-		console.log("Switch Method");
+		// console.log("Switch Method");
+		let myColor = { ...color };
+		myColor = { primary: color.secondary, secondary: color.primary };
+
+		let myMethodText = { ...methodText };
+		myMethodText = {
+			heading: methodText.bottomLine,
+			bottomLine: methodText.heading,
+		};
+
+		let myFall_asleep_at = { ...fall_asleep_at };
+		myFall_asleep_at = {
+			visible: fall_asleep_at.hidden,
+			hidden: fall_asleep_at.visible,
+		};
+
+		setColor(myColor);
+		setMethodText(myMethodText);
+		setFall_asleep_at(myFall_asleep_at);
 	};
 
 	return (
@@ -62,19 +93,19 @@ export default function MainComponent() {
 				style={[
 					styles.boldText,
 					{
-						color: theme.colors.primary,
+						color: color.primary,
 						alignSelf: "center",
 						marginBottom: 20,
 					},
 				]}
 			>
-				I want to wake up at...
+				{methodText.heading}
 			</Text>
 			{conditionRender.timeQuery && (
 				<View>
 					{/* Hours Bar */}
 					<TouchableOpacity
-						style={styles.longBar}
+						style={[styles.longBar, { borderColor: color.primary }]}
 						onPress={handleHourButton}
 					>
 						<Text
@@ -94,7 +125,7 @@ export default function MainComponent() {
 					</TouchableOpacity>
 					{/* Minutes Bar */}
 					<TouchableOpacity
-						style={styles.longBar}
+						style={[styles.longBar, { borderColor: color.primary }]}
 						onPress={handleMinuteButton}
 					>
 						<Text
@@ -119,6 +150,7 @@ export default function MainComponent() {
 						array={array.hours}
 						time={hours}
 						setTime={setHours}
+						color={color}
 					/>
 					<AppModal
 						visible={minutesModalVisible}
@@ -126,12 +158,16 @@ export default function MainComponent() {
 						array={array.minutes}
 						time={minutes}
 						setTime={setMinutes}
+						color={color}
 					/>
 					{/* AM/PM and findButton Bar */}
 					<View style={styles.buttonContainer}>
 						{/* am/pm button */}
 						<TouchableOpacity
-							style={styles.button}
+							style={[
+								styles.button,
+								{ borderColor: color.primary },
+							]}
 							onPress={handleAmPmButton}
 						>
 							<Text style={styles.marginedText}>
@@ -143,19 +179,25 @@ export default function MainComponent() {
 							style={[
 								styles.button,
 								{
-									backgroundColor: theme.colors.primary,
+									backgroundColor: color.primary,
 									borderColor: "#00000000",
 									alignItems: "center",
 									justifyContent: "center",
+									borderColor: color.primary,
 								},
 							]}
-							onPress={handleFindButton}
+							onPress={() =>
+								handleFindButton(fall_asleep_at.visible)
+							}
 						>
 							<Text style={styles.boldText}>Find</Text>
 						</TouchableOpacity>
 					</View>
 					<TouchableOpacity
-						style={styles.sleepNowButton}
+						style={[
+							styles.sleepNowButton,
+							{ borderColor: color.primary },
+						]}
 						onPress={handleSleepNowButton}
 					>
 						<Text style={styles.text}>Sleep Now</Text>
@@ -173,42 +215,87 @@ export default function MainComponent() {
 							styles.boldText,
 							{
 								textDecorationLine: "underline",
-								color: theme.colors.secondary,
+								color: color.secondary,
 							},
 						]}
 					>
-						I plan to fall asleep at
+						{methodText.bottomLine}
 					</Text>
 				</TouchableOpacity>
 			)}
 			{conditionRender.timeResult && (
 				<View style={styles.resultContainer}>
 					<View style={styles.resultComponent}>
-						<Text style={styles.serialNumberText}>1</Text>
+						<Text
+							style={[
+								styles.serialNumberText,
+								{ color: color.primary },
+							]}
+						>
+							1
+						</Text>
 						<Text style={styles.timeText}>{result[0]}</Text>
 					</View>
 					<View style={styles.resultComponent}>
-						<Text style={styles.serialNumberText}>2</Text>
+						<Text
+							style={[
+								styles.serialNumberText,
+								{ color: color.primary },
+							]}
+						>
+							2
+						</Text>
 						<Text style={styles.timeText}>{result[1]}</Text>
 					</View>
 					<View style={styles.resultComponent}>
-						<Text style={styles.serialNumberText}>3</Text>
+						<Text
+							style={[
+								styles.serialNumberText,
+								{ color: color.primary },
+							]}
+						>
+							3
+						</Text>
 						<Text style={styles.timeText}>{result[2]}</Text>
 					</View>
 					<View style={styles.resultComponent}>
-						<Text style={styles.serialNumberText}>4</Text>
+						<Text
+							style={[
+								styles.serialNumberText,
+								{ color: color.primary },
+							]}
+						>
+							4
+						</Text>
 						<Text style={styles.timeText}>{result[3]}</Text>
 					</View>
 					<View style={styles.resultComponent}>
-						<Text style={styles.serialNumberText}>5</Text>
+						<Text
+							style={[
+								styles.serialNumberText,
+								{ color: color.primary },
+							]}
+						>
+							5
+						</Text>
 						<Text style={styles.timeText}>{result[4]}</Text>
 					</View>
 					<View style={styles.resultComponent}>
-						<Text style={styles.serialNumberText}>6</Text>
+						<Text
+							style={[
+								styles.serialNumberText,
+								{ color: color.primary },
+							]}
+						>
+							6
+						</Text>
 						<Text style={styles.timeText}>{result[5]}</Text>
 					</View>
 					<TouchableOpacity
-						style={styles.resetButton}
+						style={[
+							styles.resetButton,
+							{ backgroundColor: color.primary },
+						]}
 						onPress={handleReset}
 					>
 						<MaterialCommunityIcons
@@ -244,7 +331,7 @@ const styles = StyleSheet.create({
 	longBar: {
 		paddingRight: 25,
 		height: 62,
-		borderColor: theme.colors.primary,
+
 		borderWidth: 1.5,
 		borderRadius: 20,
 		marginBottom: 30,
@@ -278,14 +365,12 @@ const styles = StyleSheet.create({
 		width: "45%",
 		borderWidth: 2,
 		borderRadius: 20,
-		borderColor: theme.colors.primary,
 		justifyContent: "center",
 	},
 	sleepNowButton: {
 		height: 250,
 		width: 250,
 		borderWidth: 5,
-		borderColor: theme.colors.primary,
 		borderRadius: 250,
 		alignItems: "center",
 		justifyContent: "center",
@@ -304,7 +389,6 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 	},
 	serialNumberText: {
-		color: theme.colors.primary,
 		fontSize: 45,
 		marginRight: 10,
 	},
@@ -314,7 +398,6 @@ const styles = StyleSheet.create({
 		fontWeight: "600",
 	},
 	resetButton: {
-		backgroundColor: theme.colors.primary,
 		alignItems: "center",
 		justifyContent: "center",
 		borderRadius: 20,
