@@ -19,16 +19,25 @@ export default function MainComponent() {
 		heading: "I want to wake up at",
 		bottomLine: "I plan to fall asleep at",
 	});
+	const [resultMethodText, setResultMethodText] = useState({
+		visible: "Then you should sleep at :-",
+		hidden: "Then you should wake up at :-",
+	});
 	const [fall_asleep_at, setFall_asleep_at] = useState({
 		visible: false,
 		hidden: true,
 	});
 	const [hoursModalVisible, setHoursModalVisible] = useState(false);
 	const [minutesModalVisible, setMinutesModalVisible] = useState(false);
-	const [hours, setHours] = useState({ color: "#a0a0a0", value: "Hours" });
+	const [hours, setHours] = useState({
+		color: "#a0a0a0",
+		value: "Hours",
+		tapped: false,
+	});
 	const [minutes, setMinutes] = useState({
 		color: "#a0a0a0",
 		value: "Minutes",
+		tapped: false,
 	});
 	const [amPm, setAmPm] = useState({ visible: "AM", hidden: "PM" });
 	const [result, setResult] = useState([]);
@@ -51,11 +60,19 @@ export default function MainComponent() {
 	const handleFindButton = (fall_asleep_at) => {
 		let hrs = parseInt(hours.value);
 		let mins = parseInt(minutes.value);
-		if (amPm.visible === "PM") hrs += 12;
-		// if (fall_asleep_at === true) {let time = }
-		let time = sleeptime(hrs, mins, amPm.visible, false, fall_asleep_at);
-		setResult(time);
-		setConditionRender({ timeQuery: false, timeResult: true });
+		if (hours.tapped === true && minutes.tapped === true) {
+			if (amPm.visible === "PM") hrs += 12;
+			// if (fall_asleep_at === true) {let time = }
+			let time = sleeptime(
+				hrs,
+				mins,
+				amPm.visible,
+				false,
+				fall_asleep_at
+			);
+			setResult(time);
+			setConditionRender({ timeQuery: false, timeResult: true });
+		}
 	};
 	const handleSleepNowButton = () => {
 		let time = sleeptime(true);
@@ -114,7 +131,7 @@ export default function MainComponent() {
 								{ color: hours.color },
 							]}
 						>
-							{hours.value}
+							{hours.value.toString()}
 						</Text>
 						<FontAwesome
 							name="angle-right"
@@ -134,7 +151,7 @@ export default function MainComponent() {
 								{ color: minutes.color },
 							]}
 						>
-							{minutes.value}
+							{minutes.value.toString()}
 						</Text>
 						<FontAwesome
 							name="angle-right"
@@ -193,15 +210,24 @@ export default function MainComponent() {
 							<Text style={styles.boldText}>Find</Text>
 						</TouchableOpacity>
 					</View>
-					<TouchableOpacity
-						style={[
-							styles.sleepNowButton,
-							{ borderColor: color.primary },
-						]}
-						onPress={handleSleepNowButton}
+					{/* Sleep now button */}
+					<View
+						style={{
+							height: "48%",
+							width: "100%",
+							justifyContent: "space-around",
+						}}
 					>
-						<Text style={styles.text}>Sleep Now</Text>
-					</TouchableOpacity>
+						<TouchableOpacity
+							style={[
+								styles.sleepNowButton,
+								{ borderColor: color.primary },
+							]}
+							onPress={handleSleepNowButton}
+						>
+							<Text style={styles.text}>Sleep Now</Text>
+						</TouchableOpacity>
+					</View>
 				</View>
 			)}
 			{conditionRender.timeQuery && (
@@ -358,7 +384,7 @@ const styles = StyleSheet.create({
 	buttonContainer: {
 		flexDirection: "row",
 		justifyContent: "space-between",
-		marginBottom: 40,
+		marginBottom: 20,
 	},
 	button: {
 		height: 62,
@@ -368,10 +394,10 @@ const styles = StyleSheet.create({
 		justifyContent: "center",
 	},
 	sleepNowButton: {
-		height: 250,
-		width: 250,
+		height: "90%",
+		width: "80%",
 		borderWidth: 5,
-		borderRadius: 250,
+		borderRadius: 2500,
 		alignItems: "center",
 		justifyContent: "center",
 		alignSelf: "center",

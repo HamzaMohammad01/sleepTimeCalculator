@@ -57,6 +57,7 @@ export default function AppModal({
 								myTime = {
 									color: theme.colors.white,
 									value: item.time,
+									tapped: true,
 								};
 								setTime(myTime);
 								setVisible(false);
