@@ -22,6 +22,7 @@ export default function MainComponent() {
 	const [resultMethodText, setResultMethodText] = useState({
 		visible: "Then you should sleep at :-",
 		hidden: "Then you should wake up at :-",
+		sleepNow: false,
 	});
 	const [fall_asleep_at, setFall_asleep_at] = useState({
 		visible: false,
@@ -70,12 +71,22 @@ export default function MainComponent() {
 				false,
 				fall_asleep_at
 			);
+
+			let myResultMethodText = { ...resultMethodText };
+			myResultMethodText.sleepNow = false;
+			setResultMethodText(myResultMethodText);
+
 			setResult(time);
 			setConditionRender({ timeQuery: false, timeResult: true });
 		}
 	};
 	const handleSleepNowButton = () => {
 		let time = sleeptime(true);
+
+		let myResultMethodText = { ...resultMethodText };
+		myResultMethodText.sleepNow = true;
+		setResultMethodText(myResultMethodText);
+
 		setResult(time);
 		setConditionRender({ timeQuery: false, timeResult: true });
 	};
@@ -93,6 +104,11 @@ export default function MainComponent() {
 			bottomLine: methodText.heading,
 		};
 
+		let myResultMethodText = { ...resultMethodText };
+		myResultMethodText.visible = resultMethodText.hidden;
+		myResultMethodText.hidden = resultMethodText.visible;
+		setResultMethodText(myResultMethodText);
+
 		let myFall_asleep_at = { ...fall_asleep_at };
 		myFall_asleep_at = {
 			visible: fall_asleep_at.hidden,
@@ -106,20 +122,20 @@ export default function MainComponent() {
 
 	return (
 		<View style={styles.container}>
-			<Text
-				style={[
-					styles.boldText,
-					{
-						color: color.primary,
-						alignSelf: "center",
-						marginBottom: 20,
-					},
-				]}
-			>
-				{methodText.heading}
-			</Text>
 			{conditionRender.timeQuery && (
 				<View>
+					<Text
+						style={[
+							styles.boldText,
+							{
+								color: color.primary,
+								alignSelf: "center",
+								marginBottom: 20,
+							},
+						]}
+					>
+						{methodText.heading}
+					</Text>
 					{/* Hours Bar */}
 					<TouchableOpacity
 						style={[styles.longBar, { borderColor: color.primary }]}
@@ -213,9 +229,11 @@ export default function MainComponent() {
 					{/* Sleep now button */}
 					<View
 						style={{
-							height: "48%",
+							height: "45%",
 							width: "100%",
 							justifyContent: "space-around",
+							// borderWidth: 2,
+							// borderColor: "red",
 						}}
 					>
 						<TouchableOpacity
@@ -251,6 +269,20 @@ export default function MainComponent() {
 			)}
 			{conditionRender.timeResult && (
 				<View style={styles.resultContainer}>
+					<Text
+						style={[
+							styles.boldText,
+							{
+								color: color.primary,
+								alignSelf: "center",
+								marginBottom: 20,
+							},
+						]}
+					>
+						{resultMethodText.sleepNow === true
+							? "Then you should wake up at :-"
+							: resultMethodText.visible}
+					</Text>
 					<View style={styles.resultComponent}>
 						<Text
 							style={[

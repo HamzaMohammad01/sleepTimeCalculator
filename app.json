@@ -19,10 +19,16 @@
 			"adaptiveIcon": {
 				"foregroundImage": "./app/assets/adaptive-icon.png",
 				"backgroundColor": "#ffffff"
-			}
+			},
+			"package": "com.hamzamohammad01.sleepTimeCalculator"
 		},
 		"web": {
 			"favicon": "./app/assets/favicon.png"
+		},
+		"extra": {
+			"eas": {
+				"projectId": "55133b16-67cc-4058-aa2f-5958bb32aad4"
+			}
 		}
 	}
 }
